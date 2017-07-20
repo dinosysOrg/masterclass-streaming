@@ -8,7 +8,7 @@ describe('Stream API', () => {
       request.get('/api/stream/getdata')
         .expect(405)
         .end((err, res) => {
-          done(err);
+          done();
         });
     });
   });
