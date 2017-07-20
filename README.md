@@ -27,6 +27,7 @@ Once you have Homebrew installed install ffmpeg from the Terminal with the follo
 ```
 brew install ffmpeg
 ```
+
 # Usage
 ## Development 
 
@@ -47,5 +48,44 @@ npm test
 2 . Rename your video name to '1.mp4'
 
 3 . Run ``` npm run dev ``` 
+
+# How to Integrate with your server
+## Please make sure MongoDB is running 
+### Edit white host in 
+
+ ```./server/config/constant.js```.
+
+This API streaming only can be streamed from some host that you defined above
+
+### Change secretCODE in 
+
+```./server/config/secret.js```
+
+### Generate api key for your server
+
+``` POST https://{yourhost}/api/newApiKey ``` 
+
+params
+
+``` 
+{
+  email: 'your_email',
+  secretkey: {secretCODE that is changed above},
+}
+
+```
+
+### This app will response 
+
+``` 
+{
+  apikey: '{apikey_excample}'
+}
+
+````
+
+### Save this apikey in your Database 
+### Use apikey for updating media to this app
+
 # License
 MIT
