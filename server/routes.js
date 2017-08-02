@@ -5,7 +5,6 @@ const uploadController = require('./controller/upload');
 const hostMiddleware = require('./middleware/host_middleware');
 const passportMiddleware = require('./middleware/passport_middleware');
 const secretKeyMiddleware = require('./middleware/secretkey_middleware');
-const videoController = require('./controller/video');
 
 module.exports = (app) => {
   let streamRoute = express.Router();
@@ -25,8 +24,6 @@ module.exports = (app) => {
   // Upload API
   uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['super user']), uploadController.upload, uploadController.afterUploaded);
 
-  // Video API
-  videoRouter.delete('/video/:video_id', passportMiddleware.apiKeyAuthorization(['super user']), videoController.delete);
   // Set up route
   app.use('/api/auth', authRoutes);
   app.use('/api/stream', streamRoute);
