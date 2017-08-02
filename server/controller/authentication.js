@@ -5,7 +5,7 @@ const error = require('../config/error');
 
 let generateToken = (user) => {
   return jwt.sign(user, secretKey.secretAPI, {
-    expiresIn: 10080,
+    expiresIn: '7d',
   });
 };
 
@@ -95,14 +95,29 @@ exports.generateAPI = (req, res, next) => {
     }
 
     if (existingUser && existingUser.apikey) {
-      error(405, 'You already had apikey, please use this', next);
-    };
+      jwt.verify(existingUser.apikey, secretKey.secretAPI, (err, decoded) => {
+        if (err) {
+          existingUser.apikey = generateAPI;
+          existingUser.save((err, existingUserSaved) => {
+            if (err) {
+              return error(500, err, next);
+            }
+
+            res.status(201).json({
+              apikey: existingUserSaved.apikey,
+            });
+          });
+        }
+
+        return error(405, 'You already had apikey, please use this', next);
+      });
+    }
 
     if (existingUser && !existingUser.apikey) {
       existingUser.apikey = generateAPI;
       existingUser.save((err, existingUserSaved) => {
         if (err) {
-          error(500, err, next);
+          return error(500, err, next);
         }
 
         res.status(201).json({

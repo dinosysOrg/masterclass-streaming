@@ -3,8 +3,8 @@ const error = require('../config/error');
 exports.CheckHostConnected = (req, res, next) => {
   let refererLink = req.headers.referer;
   if (constant.white_host.indexOf(refererLink) > -1) {
-    next();
+    return next();
   } else {
-    error(495, 'You can not do this operation', next);
+    return error(405, 'You can not do this operation', next);
   }
 };

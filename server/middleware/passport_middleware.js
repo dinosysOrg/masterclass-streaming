@@ -13,15 +13,15 @@ passportConfig.local;
 exports.requireAuth = (req, res, next) => {
   passport.authenticate('jwt', {session: false}, (err, user) => {
     if (err) {
-      error(500, err, next);
+      return error(500, err, next);
     }
 
     if (!user) {
-      error(401, 'You are not authorized', next);
+      return error(401, 'You are not authorized', next);
     }
 
     req.user = user;
-    next();
+    return next();
   })(req, res, next);
 };
 
@@ -29,15 +29,15 @@ exports.requireAuth = (req, res, next) => {
 exports.requireLogin = (req, res, next) => {
   passport.authenticate('local', {session: false}, (err, user) => {
     if (err) {
-      error(500, err, next);
+      return error(500, err, next);
     }
 
     if (!user) {
-      error(401, 'Please check your username or password', next);
+      return error(401, 'Please check your username or password', next);
     }
 
     req.user = user;
-    next();
+    return next();
   })(req, res, next);
 };
 
@@ -54,7 +54,7 @@ exports.roleAuthorization = (roles) => {
         return next();
       }
 
-      error(401, 'You are not authorized to view this content');
+      error(401, 'You are not authorized to view this content', next);
     });
   };
 };
@@ -62,15 +62,18 @@ exports.roleAuthorization = (roles) => {
 // validate apikey 
 exports.apiKeyAuthorization = (roles) => {
   return (req, res, next) => {
-    let email = req.body.email;
-    let apikey = req.body.apikey;
-    User.find({'email': email}, (err, foundUser) => {
+    let email = req.get('email');
+    let apikey = req.get('apikey');
+    if (!email || !apikey || email === '' || apikey === '') {
+      return error(405, 'You are not authorized to do this operatior', next);
+    }
+    User.findOne({'email': email}, (err, foundUser) => {
       if (err) {
-        error(422, 'No user is found', next);
+        return error(422, 'No user is found', next);
       }
 
       if (!foundUser) {
-        error(405, 'Please generate your apikey', next);
+        return error(405, 'Please generate your apikey', next);
       }
 
       // If user has role superUser, he/she does not need validate apikey
@@ -80,21 +83,21 @@ exports.apiKeyAuthorization = (roles) => {
 
       // Validate apikey that is existed
       if (!foundUser.apikey) {
-        error(405, 'You do not have any apikey, Please generae ApiKey', next);
+        return error(405, 'You do not have any apikey, Please generae ApiKey', next);
       }
 
       // Validate apikey in different between apikey requested and apikey queried 
       if (foundUser.apikey != apikey) {
-        error(405, 'You do not have any apikey, Please generae ApiKey', next);
+        return error(405, 'You do not have any apikey, Please generae ApiKey', next);
       }
 
       jwt.verify(foundUser.apikey, secretKey.secretAPI, (err, decoded) => {
         if (err) {
-          error(422, err.name, next);
+          return error(422, err.name, next);
         }
-      });
 
-      next();
+        return next();
+      });
     });
   };
 };
