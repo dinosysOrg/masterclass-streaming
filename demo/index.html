@@ -4,19 +4,39 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <body>
-    <video id="my-video" class="video-js" controls controlsList="nodownload" preload="auto" width="640" height="264"
+     <video id="my-video" class="video-js" controls controlsList="nodownload" preload="auto" width="640" height="264"
     poster="http://localhost:5000/demo/img/1.png" data-setup="{}">
-      <source src="http://localhost:5000/api/stream/getdata" type="video/mp4" />  
+      <source src="http://localhost:5000/api/stream/getdata?id=59818d0dd7aaba1f6948c677" type="video/mp4" />  
     </video>
-    <video id="my-video1" class="video-js" controls controlsList="nodownload" preload="auto" width="640" height="264"
+    <!-- <video id="my-video1" class="video-js" controls controlsList="nodownload" preload="auto" width="640" height="264"
     poster="http://localhost:5000/demo/img/1.png" data-setup="{}">
       <source src="http://localhost:5000/api/stream/getdata" type="video/mp4" /> 
-    </video>
-    <script src="http://localhost:5000/demo/js/index.js"></script>
-    <script>      
-    </script>
+    </video>  -->
+    <div class="container-fluid">
+      <div class="col-lg-6">
+         <form id="uploadForm"
+          enctype="multipart/form-data"
+          action="/api/upload"
+          method="post">
+          <input type="file" name="overview" multiple />
+          <input type="submit" value="Upload Image" name="submit">
+          <input type='text' id='random' name='random'><br>
+          <span id = "status"></span>
+        </form>
+      </div>
+      <div class="col-lg-6">
+        <div class="progress">
+          <div id="bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src='./demo/js/index.js'></script>
   </body>
 </html>

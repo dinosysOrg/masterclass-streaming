@@ -1,6 +1,7 @@
 const express = require('express');
 const streamController = require('./controller/stream');
 const authenticationController = require('./controller/authentication');
+const uploadController = require('./controller/upload');
 const hostMiddleware = require('./middleware/host_middleware');
 const passportMiddleware = require('./middleware/passport_middleware');
 const secretKeyMiddleware = require('./middleware/secretkey_middleware');
@@ -9,18 +10,20 @@ module.exports = (app) => {
   let streamRoute = express.Router();
   let authRoutes = express.Router();
   let apiKeyRoutes = express.Router();
-
+  let uploadRouter = express.Router();
   // Auth API
   authRoutes.post('/register', authenticationController.register);
   authRoutes.post('/login', passportMiddleware.requireLogin, authenticationController.login);
 
   // Generate ApiKey for Intergrating server
   apiKeyRoutes.post('/newApiKey', secretKeyMiddleware.checkSecretKey, authenticationController.generateAPI);
-  // Steam API
+  // Stream API
   streamRoute.get('/getdata', hostMiddleware.CheckHostConnected, streamController.getData);
 
+  // Upload API
+  uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['super user']), uploadController.upload, uploadController.afterUploaded);
   // Set up route
   app.use('/api/auth', authRoutes);
   app.use('/api/stream', streamRoute);
-  app.use('/api', apiKeyRoutes);
+  app.use('/api', [apiKeyRoutes, uploadRouter]);
 };
