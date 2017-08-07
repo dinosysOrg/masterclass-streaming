@@ -31,20 +31,20 @@ exports.register = (req, res, next) => {
   let role = req.body.role;
 
   if (!email) {
-    error(422, 'You must enter an email address', next);
+    return error(422, 'You must enter an email address', next);
   }
 
   if (!password) {
-    error(422, 'You must enter an password', next);
+    return error(422, 'You must enter an password', next);
   }
 
   User.findOne({email: email}, function(err, existingUser) {
     if (err) {
-      error(500, err, next);
+      return error(500, err, next);
     }
 
     if (existingUser) {
-      error(422, 'Email address is already in use', next);
+      return error(422, 'Email address is already in use', next);
     }
 
     let user = new User({
@@ -55,7 +55,7 @@ exports.register = (req, res, next) => {
 
     user.save((err, user) => {
       if (err) {
-        error(500, err, next);
+        return error(500, err, next);
       }
 
       let userInfo = setUserInfo(user);
@@ -79,13 +79,13 @@ exports.generateAPI = (req, res, next) => {
 
   User.findOne({email: email}, function(err, existingUser) {
     if (err) {
-      error(500, err);
+      return error(500, err, next);
     }
 
     if (!existingUser) {
       user.save((err, user) => {
         if (err) {
-          return next(err);
+          return error(500, err, next);
         }
 
         res.status(201).json({

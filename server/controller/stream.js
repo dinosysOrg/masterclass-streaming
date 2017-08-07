@@ -1,15 +1,18 @@
 const fs = require('fs');
 const Video = require('../model/video');
+const error = require('../config/error');
 
 // This api will be changed after.
 exports.getData = (req, res, next) => {
   Video.findById(req.query.id, (err, video) => {
+    if (!video) {
+      return error(404, 'File Not Found', next);
+    }
+
     const data = video.url;
     fs.stat(data, (err, stats) => {
       if (err) {
-        let err = new Error('File Not Found');
-        err.status = 404;
-        return next(err);
+        return error(404, 'File Not Found', next);
       }
       const {range} = req.headers;
       const {size} = stats;
