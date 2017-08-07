@@ -11,6 +11,7 @@ module.exports = (app) => {
   let authRoutes = express.Router();
   let apiKeyRoutes = express.Router();
   let uploadRouter = express.Router();
+  let videoRouter = express.Router();
   // Auth API
   authRoutes.post('/register', authenticationController.register);
   authRoutes.post('/login', passportMiddleware.requireLogin, authenticationController.login);
@@ -22,8 +23,9 @@ module.exports = (app) => {
 
   // Upload API
   uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['super user']), uploadController.upload, uploadController.afterUploaded);
+
   // Set up route
   app.use('/api/auth', authRoutes);
   app.use('/api/stream', streamRoute);
-  app.use('/api', [apiKeyRoutes, uploadRouter]);
+  app.use('/api', [apiKeyRoutes, uploadRouter, videoRouter]);
 };
