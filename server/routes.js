@@ -22,7 +22,7 @@ module.exports = (app) => {
   streamRoute.get('/getdata', hostMiddleware.CheckHostConnected, streamController.getData);
 
   // Upload API
-  uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['super user']), uploadController.upload, uploadController.afterUploaded);
+  uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['superuser']), uploadController.upload, uploadController.afterUploaded);
 
   // Set up route
   app.use('/api/auth', authRoutes);

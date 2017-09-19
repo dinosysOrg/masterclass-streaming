@@ -47,14 +47,14 @@ exports.roleAuthorization = (roles) => {
     let user = req.user;
     User.findById(user._id, (err, foundUser) => {
       if (err) {
-        error(422, 'No user is found', next);
+        return error(422, 'No user is found', next);
       }
 
       if (roles.indexOf(foundUser.role) > -1) {
         return next();
       }
 
-      error(401, 'You are not authorized to view this content', next);
+      return error(401, 'You are not authorized to view this content', next);
     });
   };
 };
@@ -81,7 +81,7 @@ exports.apiKeyAuthorization = (roles) => {
         return next();
       }
 
-      // Validate apikey that is existed
+      // Validate apikey that is existed or not
       if (!foundUser.apikey) {
         return error(405, 'You do not have any apikey, Please generae ApiKey', next);
       }
