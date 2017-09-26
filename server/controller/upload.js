@@ -6,7 +6,8 @@ const Video = require('../model/video');
 const fs = require('ssh2-fs');
 const connect = require('ssh2-connect');
 const {storeFirst} = require('../config/env');
-const {storeSecond} = require('../config/env');
+const {publicStoreFirst} = require('../config/env');
+const {publicStoreSecond} = require('../config/env');
 const date = new Date();
 const stringDate = `${date.getDate()}${date.getMonth()+1}${date.getUTCFullYear()}`;
 
@@ -63,15 +64,15 @@ exports.afterUploaded = (req, res) => {
     listVideo.push(
       new Promise((resolve, reject) => {
         let video = new Video({
-          url: [`http://${storeFirst.STORE_IP_FIRST}:${storeFirst.STORE_PORT_FIRST}/${stringDate}/${file.filename}`,
-            `http://${storeSecond.STORE_IP_SECOND}:${storeSecond.STORE_PORT_SECOND}/${stringDate}/${file.filename}`],
+          url: [`http://${publicStoreFirst.STORE_IP_FIRST}:${publicStoreFirst.STORE_PORT_FIRST}/${stringDate}/${file.filename}`,
+            `http://${publicStoreSecond.STORE_IP_SECOND}:${publicStoreSecond.STORE_PORT_SECOND}/${stringDate}/${file.filename}`],
         });
         video.save((err, newVideo) => {
           if (err) {
             reject(err);
           };
           let videoResponse = {
-            url: newVideo.url,
+            id: newVideo._id,
           };
           resolve(videoResponse);
         });

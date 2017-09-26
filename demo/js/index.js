@@ -20,4 +20,9 @@ $(document).ready(function() {
     });
     return false;
   });
+  $('#change').click(function() {
+    let src = $('#srcText').val();
+    $('#videoSrc').attr('src', `http://localhost:5000/api/stream/getdata?id=${src}`);
+    $('#my-video').load();
+  });
 });

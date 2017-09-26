@@ -5,7 +5,12 @@ exports.storeFirst = {
   STORE_PASSWORD_FIRST: 'root',
 };
 
-exports.storeSecond = {
+exports.publicStoreFirst = {
+  STORE_IP_FIRST: '1.1.1.3',
+  STORE_PORT_FIRST: 7070,
+};
+
+exports.publicStoreSecond = {
   STORE_IP_SECOND: '1.1.1.3',
   STORE_PORT_SECOND: 6060,
 };

@@ -1,3 +1,3 @@
 module.exports = {
-  'white_host': ['http://localhost:5000/play', 'http://localhost:5000/play/'],
+  'white_host': ['http://1.1.1.2/play', 'http://1.1.1.2/play/'],
 };

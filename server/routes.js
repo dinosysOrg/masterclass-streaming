@@ -2,7 +2,7 @@ const express = require('express');
 const streamController = require('./controller/stream');
 const authenticationController = require('./controller/authentication');
 const uploadController = require('./controller/upload');
-// const hostMiddleware = require('./middleware/host_middleware');
+const hostMiddleware = require('./middleware/host_middleware');
 const passportMiddleware = require('./middleware/passport_middleware');
 const secretKeyMiddleware = require('./middleware/secretkey_middleware');
 const systemController = require('./controller/system');
@@ -21,7 +21,7 @@ module.exports = (app) => {
   // Generate ApiKey for Intergrating server
   apiKeyRoutes.post('/newApiKey', secretKeyMiddleware.checkSecretKey, authenticationController.generateAPI);
   // Stream API
-  streamRoute.get('/getdata', streamController.getData);
+  streamRoute.get('/getdata', hostMiddleware.CheckHostConnected, streamController.getData);
 
   // Upload API
   uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['superuser']),

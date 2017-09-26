@@ -10,8 +10,10 @@
   <body>
      <video id="my-video" class="video-js" controls controlsList="nodownload" preload="auto" width="640" height="264"
     poster="http://localhost:5000/demo/img/1.png" data-setup="{}">
-      <source src="http://localhost:5000/api/stream/getdata?id=59818d0dd7aaba1f6948c677" type="video/mp4" />  
+      <source id ="videoSrc" src="http://localhost:5000/api/stream/getdata?id=59818d0dd7aaba1f6948c677" type="video/mp4" />  
     </video>
+     ID VIDEO: <input type='text' id='srcText' name='random'><br>
+    <button id="change">Change VIDEO SRC</button>
     <!-- <video id="my-video1" class="video-js" controls controlsList="nodownload" preload="auto" width="640" height="264"
     poster="http://localhost:5000/demo/img/1.png" data-setup="{}">
       <source src="http://localhost:5000/api/stream/getdata" type="video/mp4" /> 
@@ -24,7 +26,7 @@
           method="post">
           <input type="file" name="overview" multiple />
           <input type="submit" value="Upload Image" name="submit">
-          <input type='text' id='apikey' name='random'><br>
+          API KEY: <input type='text' id='apikey' name='random'><br>
           <span id = "status"></span>
         </form>
       </div>
