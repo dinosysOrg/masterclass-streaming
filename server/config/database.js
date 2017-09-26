@@ -1,3 +1,5 @@
+const {dbServer} = require('./env');
+
 module.exports = {
-  'url': 'mongodb://mongo:27017/vmastreaming',
+  'url': `mongodb://${dbServer.SERVER_NAME}:${dbServer.POST}/vmastreaming`,
 };

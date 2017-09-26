@@ -2,7 +2,7 @@
 version: '2'
 services:
   web:
-    image: nhatndm1193/masterclass_streaming
+    image: nhatndm1193/streaming
     links:
     - database:mongo
   database:

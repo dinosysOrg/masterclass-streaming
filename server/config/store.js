@@ -1,25 +1,21 @@
-const multer = require('multer');
-const fs = require('fs');
 const path = require('path');
+const sftpStorage = require('multer-sftp');
+const {storeFirst} = require('../config/env');
 
 /**
  * Generate Dir
  * @return {folder}
  */
-function generateDir() {
-  const date = new Date();
-  const stringDate = `${date.getDate()}${date.getMonth()+1}${date.getUTCFullYear()}`;
-  const storeDir = `./store/${stringDate}`;
-  if (!fs.existsSync(storeDir)) {
-    fs.mkdirSync(storeDir);
-  };
-  return storeDir;
-};
 
-exports.store = multer.diskStorage({
+exports.store = sftpStorage({
+  sftp: {
+    host: storeFirst.STORE_IP_FIRST,
+    port: storeFirst.STORE_PORT_FIRST,
+    username: storeFirst.STORE_USERNAME_FIRST,
+    password: storeFirst.STORE_PASSWORD_FIRST,
+  },
   destination: function(req, file, cb) {
-    const store = generateDir();
-    cb(null, store);
+    cb(null, req.store);
   },
   filename: function(req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
