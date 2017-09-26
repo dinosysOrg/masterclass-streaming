@@ -31,6 +31,6 @@ module.exports = (app) => {
   systemRouter.post('/webhook', systemController.autoDeploy);
   // Set up route
   app.use('/api/auth', authRoutes);
-  // app.use('/api/stream', streamRoute);
-  app.use('/api', [apiKeyRoutes, uploadRouter, videoRouter, systemRouter, streamRoute]);
+  app.use('/api/stream', streamRoute);
+  app.use('/api', [apiKeyRoutes, uploadRouter, videoRouter, systemRouter]);
 };

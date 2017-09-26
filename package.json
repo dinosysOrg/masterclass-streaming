@@ -39,6 +39,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "pg": "^7.0.1",
+    "request": "^2.82.0",
     "ssh2": "^0.5.5",
     "ssh2-connect": "^1.0.2",
     "ssh2-fs": "^0.2.4"
