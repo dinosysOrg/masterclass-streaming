@@ -2,7 +2,7 @@
 version: '2'
 services:
   web:
-    image: nhatndm1193/streaming
+    image: nhatndm1193/streaming:betav1
     links:
     - database:mongo
   database:

@@ -5,7 +5,7 @@ $(document).ready(function() {
     $(this).ajaxSubmit({
       headers: {
         'email': 'nhatndm1193@gmail.com',
-        'apikey': '',
+        'apikey': $('#apikey').val(),
       },
       error: function(xhr) {
         console.log(xhr);

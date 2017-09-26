@@ -12,5 +12,5 @@ exports.storeSecond = {
 
 exports.dbServer = {
   SERVER_NAME: 'mongo',
-  POST: 27071,
+  POST: 27017,
 };
