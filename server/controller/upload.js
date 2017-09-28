@@ -1,38 +1,38 @@
 const multer = require('multer');
-const storeConfig = require('../config/store');
-const upload = multer({storage: storeConfig.store}).any();
+const storageConfig = require('../config/storage');
+const upload = multer({storage: storageConfig.storage}).any();
 const error = require('../config/error');
 const Video = require('../model/video');
 const fs = require('ssh2-fs');
 const connect = require('ssh2-connect');
-const {storeFirst} = require('../config/env');
-const {publicStoreFirst} = require('../config/env');
-const {publicStoreSecond} = require('../config/env');
+const {storageFirst} = require('../config/env');
+const {publicStorageFirst} = require('../config/env');
+const {publicStorageSecond} = require('../config/env');
 const date = new Date();
 const stringDate = `${date.getDate()}${date.getMonth()+1}${date.getUTCFullYear()}`;
 
 exports.beforeUpload = (req, res, next) => {
   let generateDir = new Promise(function(resolve, reject) {
-    const storeDir = `/home/store/${stringDate}`;
+    const storageDir = `/home/storage/${stringDate}`;
     connect({
-      host: storeFirst.STORE_IP_FIRST,
-      port: storeFirst.STORE_PORT_FIRST,
-      username: storeFirst.STORE_USERNAME_FIRST,
-      password: storeFirst.STORE_PASSWORD_FIRST,
+      host: storageFirst.STORAGE_IP_FIRST,
+      port: storageFirst.STORAGE_PORT_FIRST,
+      username: storageFirst.STORAGE_USERNAME_FIRST,
+      password: storageFirst.STORAGE_PASSWORD_FIRST,
     }, function(err, ssh) {
-      fs.exists(ssh, storeDir, (err, existed) =>{
+      fs.exists(ssh, storageDir, (err, existed) =>{
         if (err) {
           reject(err);
         }
 
         if (existed) {
-          resolve(storeDir);
+          resolve(storageDir);
         } else {
-          fs.mkdir(ssh, storeDir, (err) => {
+          fs.mkdir(ssh, storageDir, (err) => {
             if (err) {
               reject(err);
             }
-            resolve(storeDir);
+            resolve(storageDir);
           });
         }
       });
@@ -40,11 +40,9 @@ exports.beforeUpload = (req, res, next) => {
   });
 
   generateDir.then(function(data) {
-    req.store = data;
-    console.log(data);
+    req.storage = data;
     next();
   }).catch(function(err) {
-    console.log(err);
     return error(500, err, next);
   });
 };
@@ -64,8 +62,9 @@ exports.afterUploaded = (req, res) => {
     listVideo.push(
       new Promise((resolve, reject) => {
         let video = new Video({
-          url: [`http://${publicStoreFirst.STORE_IP_FIRST}:${publicStoreFirst.STORE_PORT_FIRST}/${stringDate}/${file.filename}`,
-            `http://${publicStoreSecond.STORE_IP_SECOND}:${publicStoreSecond.STORE_PORT_SECOND}/${stringDate}/${file.filename}`],
+          url: [`http://${publicStorageFirst.STORAGE_IP_FIRST}:${publicStorageFirst.STORAGE_PORT_FIRST}/${stringDate}/${file.filename}`,
+            `http://${publicStorageSecond.STORAGE_IP_SECOND}:${publicStorageSecond.STORAGE_PORT_SECOND}/${stringDate}/${file.filename}`],
+          uploader: req.get('email'),
         });
         video.save((err, newVideo) => {
           if (err) {

@@ -6,6 +6,7 @@ const hostMiddleware = require('./middleware/host_middleware');
 const passportMiddleware = require('./middleware/passport_middleware');
 const secretKeyMiddleware = require('./middleware/secretkey_middleware');
 const systemController = require('./controller/system');
+const videoController = require('./controller/video');
 
 module.exports = (app) => {
   let streamRoute = express.Router();
@@ -26,6 +27,10 @@ module.exports = (app) => {
   // Upload API
   uploadRouter.post('/upload', passportMiddleware.apiKeyAuthorization(['superuser']),
     uploadController.beforeUpload, uploadController.upload, uploadController.afterUploaded);
+
+  // Video API
+  videoRouter.get('/videos', videoController.findAll);
+  videoRouter.get('/videos/:video_id', videoController.findOne);
 
   // System API
   systemRouter.post('/webhook', systemController.autoDeploy);

@@ -7,6 +7,9 @@ let VideoSchema = mongoose.Schema({
     unique: true,
     required: true,
   }],
+  uploader: {
+    type: String,
+  },
 }, {
   timestamps: true,
 });
