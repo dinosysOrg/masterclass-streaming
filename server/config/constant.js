@@ -1,3 +1,3 @@
 module.exports = {
-  'white_host': ['https://staging.masterclassvietnam.com/play', 'https://staging.masterclassvietnam.com/play/'],
+  'white_host': ['https://streaming.masterclassvietnam.com/play', 'https://staging.masterclassvietnam.com/'],
 };
