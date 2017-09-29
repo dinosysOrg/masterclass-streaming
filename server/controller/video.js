@@ -23,3 +23,23 @@ exports.delete = (req, res, next) => {
     });
   });
 };
+
+exports.findAll = (req, res, next) => {
+  Video.find((err, list) => {
+    if (err) {
+      return error(500, err, next);
+    }
+
+    res.status(200).send(list);
+  });
+};
+
+exports.findOne = (req, res, next) => {
+  Video.findById(req.params.video_id, (err, item) => {
+    if (err) {
+      return error(500, err, next);
+    }
+
+    res.status(200).send(item);
+  });
+};

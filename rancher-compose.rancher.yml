@@ -1,0 +1,14 @@
+## For Rancher Deloypment
+version: '2'
+services:
+  database:
+    scale: 1
+    health_check:
+      healthy_threshold: 2
+      response_timeout: 5000
+      port: 27017
+      unhealthy_threshold: 3
+      interval: 5000
+      strategy: recreate
+  web:
+    scale: 2

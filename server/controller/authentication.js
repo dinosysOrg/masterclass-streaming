@@ -69,61 +69,65 @@ exports.register = (req, res, next) => {
 };
 
 exports.generateAPI = (req, res, next) => {
-  let email = req.body.email;
-  let generateAPI = generateToken({email: email});
-  let user = new User({
-    email: email,
-    password: generateAPI,
-    apikey: generateAPI,
-  });
+  if (!req.body.email) {
+    return error(422, 'Email can not be blank', next);
+  } else {
+    let email = req.body.email;
+    let generateAPI = generateToken({email: email});
+    let user = new User({
+      email: email,
+      password: generateAPI,
+      apikey: generateAPI,
+    });
 
-  User.findOne({email: email}, function(err, existingUser) {
-    if (err) {
-      return error(500, err, next);
-    }
+    User.findOne({email: email}, function(err, existingUser) {
+      if (err) {
+        return error(500, err, next);
+      }
 
-    if (!existingUser) {
-      user.save((err, user) => {
-        if (err) {
-          return error(500, err, next);
-        }
+      if (!existingUser) {
+        user.save((err, user) => {
+          if (err) {
+            return error(500, err, next);
+          }
 
-        res.status(201).json({
-          apikey: user.apikey,
-        });
-      });
-    }
-
-    if (existingUser && existingUser.apikey) {
-      jwt.verify(existingUser.apikey, secretKey.secretAPI, (err, decoded) => {
-        if (err) {
-          existingUser.apikey = generateAPI;
-          existingUser.save((err, existingUserSaved) => {
-            if (err) {
-              return error(500, err, next);
-            }
-
-            res.status(201).json({
-              apikey: existingUserSaved.apikey,
-            });
+          res.status(201).json({
+            apikey: user.apikey,
           });
-        }
-
-        return error(405, 'You already had apikey, please use this', next);
-      });
-    }
-
-    if (existingUser && !existingUser.apikey) {
-      existingUser.apikey = generateAPI;
-      existingUser.save((err, existingUserSaved) => {
-        if (err) {
-          return error(500, err, next);
-        }
-
-        res.status(201).json({
-          apikey: existingUserSaved.apikey,
         });
-      });
-    }
-  });
+      }
+
+      if (existingUser && existingUser.apikey) {
+        jwt.verify(existingUser.apikey, secretKey.secretAPI, (err, decoded) => {
+          if (err) {
+            existingUser.apikey = generateAPI;
+            existingUser.save((err, existingUserSaved) => {
+              if (err) {
+                return error(500, err, next);
+              }
+
+              res.status(201).json({
+                apikey: existingUserSaved.apikey,
+              });
+            });
+          }
+
+          return error(405, 'You already had apikey, please use this', next);
+        });
+      }
+
+      if (existingUser && !existingUser.apikey) {
+        existingUser.apikey = generateAPI;
+        existingUser.save((err, existingUserSaved) => {
+          if (err) {
+            return error(500, err, next);
+          }
+
+          res.status(201).json({
+            apikey: existingUserSaved.apikey,
+          });
+        });
+      }
+    });
+  }
 };

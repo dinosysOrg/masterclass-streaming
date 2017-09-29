@@ -42,6 +42,7 @@ if (env == 'development') {
 }
 
 app.get('/play', (req, res) => {
+  logger.info('Just connected');
   res.sendFile(__dirname + '/demo/index.html');
 });
 
